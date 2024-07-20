@@ -1,0 +1,126 @@
+/* Custom CSS file for styling the Dash dashboard */
+
+/* Anton font for titles */
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.anton-font {
+    font-family: 'Anton', sans-serif;
+    text-align: center;
+    color: white; /* Default color */
+}
+
+/* Roboto Slab font for regular text */
+.roboto-slab-regular {
+    font-family: 'Roboto Slab', serif;
+    color: white;
+}
+
+/* Dashboard title styling */
+.dashboard-red {
+    color: #ff5d4b !important; /* Use the provided hex code for red */
+}
+
+/* Dropdown styling */
+.black-dropdown .Select-control {
+    background-color: black !important;
+    color: white !important;
+    border: none !important; /* Remove the white outline */
+    box-shadow: none !important; /* Remove any shadow outline */
+}
+
+.black-dropdown .Select-value-label {
+    color: white !important;
+}
+
+.black-dropdown .Select-placeholder {
+    color: white !important;
+}
+
+.black-dropdown .Select--single > .Select-control .Select-value {
+    color: white !important;
+}
+
+.black-dropdown .Select-arrow-zone {
+    color: white !important;
+}
+
+.black-dropdown .Select-menu-outer {
+    background-color: black !important;
+}
+
+.black-dropdown .Select-option {
+    background-color: black !important;
+    color: white !important;
+}
+
+.black-dropdown .Select-option.is-focused, .Select-option.is-selected {
+    background-color: #333 !important;
+    color: white !important;
+}
+
+/* Ensuring the selected option text is white */
+.black-dropdown .Select--single > .Select-control .Select-value {
+    color: white !important;
+}
+
+/* Remove border and outline for the dropdown */
+.black-dropdown .Select-control {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Ensuring no border for the dropdown menu */
+.black-dropdown .Select-menu-outer {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Graph container styling */
+#graphs-container {
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Individual graph container styling */
+.graph-container {
+    width: 48%;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+/* Top users table styling */
+#top-users-table {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Additional graphs container styling */
+#additional-graphs {
+    margin-top: 20px;
+    width: 100%;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+/* Adjust the size of the word cloud container */
+#wordcloud-container {
+    width: 45% !important;
+    margin: 0 auto;
+    display: block;
+}
+
+.black-searchbox {
+    background-color: black;
+    color: white;
+    border: 1px solid #666;
+    padding: 5px;
+    border-radius: 5px;
+}

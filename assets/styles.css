@@ -1,0 +1,133 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
+
+/* Font Styles */
+.anton-font {
+    font-family: 'Anton', sans-serif;
+}
+
+.roboto-slab-regular {
+    font-family: "Roboto Slab", serif;
+    font-weight: 400;
+}
+
+.roboto-slab-bold {
+    font-family: "Roboto Slab", serif;
+    font-weight: 700;
+}
+
+/* General Body Styling */
+body {
+    background-color: #121212;
+    color: white;
+    overflow-y: scroll;
+}
+
+/* Card Styling */
+.card {
+    background-color: #212121;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Dashboard Title Styling */
+.dashboard-red {
+    color: #ff5d4b !important;
+}
+
+/* Dropdown Styling */
+.dcc-dropdown,
+.black-dropdown .Select-control {
+    background-color: black !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.dcc-dropdown .dropdown-menu,
+.black-dropdown .Select-menu-outer,
+.black-dropdown .Select-option {
+    background-color: black !important;
+    color: white !important;
+}
+
+.black-dropdown .Select-option.is-focused, .Select-option.is-selected {
+    background-color: #333 !important;
+    color: white !important;
+}
+
+.black-dropdown .Select-placeholder,
+.black-dropdown .Select-value-label,
+.black-dropdown .Select-arrow-zone,
+.dcc-dropdown .dropdown-item {
+    color: white !important;
+}
+
+/* Graph Container Styling */
+#graphs-container {
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.graph-container {
+    width: 48%;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+/* Top Users Table Styling */
+#top-users-table {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Additional Graphs Container Styling */
+#additional-graphs {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Word Cloud Container Styling */
+#wordcloud-container {
+    width: 45% !important;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Search Box Styling */
+.black-searchbox {
+    background-color: black;
+    color: white;
+    border: 1px solid #666;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.graph-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#wordcloud-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 100%;
+    height: 800px;  /* Increased height to match the new word cloud size */
+}
+
+#wordcloud-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
