@@ -14,7 +14,6 @@ import os
 import pkg_resources
 import gunicorn
 
-
 print("pandas version:", pd.__version__)
 print("wordcloud version:", pkg_resources.get_distribution("Wordcloud").version)
 print("plotly version:", plotly.__version__)
@@ -28,7 +27,7 @@ stop_words = set([
 def preprocess_data(df):
     print("Preprocessing data")
     # Check if the necessary columns are present
-    required_columns = ['view_count', 'like_count', 'dislike_count', 'title', 'hashtags', 'channel', 'video_url', 'subscriber_count', 'description']
+    required_columns = ['view_count', 'like_count', 'dislike_count', 'title', 'hashtags', 'channel', 'video_url', 'subscriber_count', 'description', 'duration']
     for column in required_columns:
         if column not in df.columns:
             print(f"Error: Column '{column}' not found in DataFrame")
@@ -39,13 +38,47 @@ def preprocess_data(df):
     df['dislike_count'] = df['dislike_count'].fillna(0).astype(int)
     df['subscriber_count'] = df['subscriber_count'].fillna(0).astype(int)
     
-    df['Total Interactions'] = df['view_count'] + df['like_count'] + df['dislike_count']
-    # Add 'Net Likes' column
-    df['Net Likes'] = df['like_count'] - df['dislike_count']
-    # Drop duplicate entries for users based on the highest subscriber count
-    df = df.sort_values(by='subscriber_count', ascending=False).drop_duplicates(subset='channel', keep='first')
+    # Convert duration to total minutes
+    def convert_duration(duration):
+        try:
+            minutes, seconds = map(int, duration.split(':'))
+            return minutes + seconds / 60
+        except:
+            return 0  # Handle cases where the duration is not in the expected format
+
+    df['duration'] = df['duration'].fillna('0:00').apply(convert_duration)
     
-    return df
+    # Aggregate by video title, summing views and averaging duration
+    agg_df = df.groupby('title').agg({
+        'view_count': 'sum',
+        'like_count': 'sum',
+        'dislike_count': 'sum',
+        'duration': 'mean',
+        'hashtags': 'first',
+        'channel': 'first',
+        'video_url': 'first',
+        'subscriber_count': 'first',
+        'description': 'first'
+    }).reset_index()
+    
+    agg_df['Total Interactions'] = agg_df['view_count'] + agg_df['like_count'] + agg_df['dislike_count']
+    # Add 'Net Likes' column
+    agg_df['Net Likes'] = agg_df['like_count'] - agg_df['dislike_count']
+    # Drop duplicate entries for users based on the highest subscriber count
+    agg_df = agg_df.sort_values(by='subscriber_count', ascending=False).drop_duplicates(subset='channel', keep='first')
+    
+    # Categorize duration into 3-minute intervals
+    bins = range(0, int(agg_df['duration'].max()) + 3, 3)
+    labels = [f'{i}-{i+3}' for i in bins[:-1]]
+    agg_df['duration_category'] = pd.cut(agg_df['duration'], bins=bins, labels=labels, right=False, ordered=True)
+    
+    # Aggregate the view counts by duration intervals
+    duration_view_counts = agg_df.groupby('duration_category')['view_count'].sum().reset_index()
+    
+    return agg_df, duration_view_counts
+
+
+
 
 data_directory = os.path.join(os.path.dirname(__file__), 'data')
 
@@ -59,7 +92,6 @@ categories = {
     'business': preprocess_data(pd.read_csv(os.path.join(data_directory, 'dash_csv_business.csv'))),
     'news': preprocess_data(pd.read_csv(os.path.join(data_directory, 'dash_csv_news.csv')))
 }
-
 
 categories = {k: v for k, v in categories.items() if v is not None}
 
@@ -107,7 +139,7 @@ app = Dash(__name__, external_stylesheets=[
 
 server = app.server
 
-app.layout = html.Div(style={'backgroundColor': '#121212', 'color': 'white', 'padding': '20px', 'width': '100%'}, children=[
+app.layout = html.Div(style={'backgroundColor': '#121212', 'color': 'white', 'padding': '20px', 'max-width': '100vw', 'overflow-x': 'hidden'}, children=[
     html.Div(style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'width': '100%'}, children=[
         html.Img(src=f'data:image/png;base64,{logo_base64}', style={'height': '150px', 'marginRight': '20px'}),
         html.H1([
@@ -116,54 +148,56 @@ app.layout = html.Div(style={'backgroundColor': '#121212', 'color': 'white', 'pa
         ], className='anton-font', style={'fontSize': '48px', 'textAlign': 'center'})
     ]),
     html.Div([
-        html.Label("Category of Media", className='roboto-slab-regular', style={'marginRight': '10px'}),
-        dcc.Dropdown(
-            id='category-dropdown',
-            options=[{'label': cat.capitalize(), 'value': cat} for cat in categories.keys()],
-            value='entertainment',
-            clearable=False,
-            className='black-dropdown',
-            style={'width': '200px', 'color': '#ffffff'}
-        ),
-        html.Label("Select Analysis Type", className='roboto-slab-regular', style={'marginLeft': '20px', 'marginRight': '10px'}),
-        dcc.Dropdown(
-            id='sort-dropdown',
-            options=[
-                {'label': 'Engagement Metrics', 'value': 'Engagement Metrics'},
-                {'label': 'Trends', 'value': 'Trends'}
-            ],
-            value='Engagement Metrics',
-            clearable=False,
-            className='black-dropdown',
-            style={'width': '200px', 'color': '#ffffff'}
-        )
-    ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '20px', 'width': '100%'}),
-    html.Div([
-        dcc.Input(
-            id='search-input',
-            type='text',
-            placeholder='Search a keyword...',
-            className='black-searchbox',
-            style={'width': '300px', 'color': '#ffffff', 'marginRight': '10px'}
-        ),
-        html.Button('Search', id='search-button', n_clicks=0, className='black-searchbox', style={'color': '#ffffff'})
-    ], style={'marginBottom': '20px'}),
-    html.Div(id='graphs-container', className='roboto-slab-regular', children=[
         html.Div([
-            dcc.Graph(id='bar-chart', style={'display': 'none'}),
-            dcc.Graph(id='subscriber-chart', style={'display': 'none'}),
-        ], className='graph-container'),
+            dcc.Input(
+                id='search-input',
+                type='text',
+                placeholder='Enter a keyword for relevant post search...',
+                className='black-searchbox roboto-light',
+                style={'width': '300px', 'color': '#ffffff', 'marginRight': '10px'}
+            ),
+            html.Button('Search', id='search-button', n_clicks=0, className='black-searchbox roboto-light', style={'color': '#ffffff'})
+        ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '20px', 'flex': '1'}),
         html.Div([
-            dcc.Graph(id='dot-like-chart', style={'display': 'none'}),
-            dcc.Graph(id='dot-dislike-chart', style={'display': 'none'}),
-        ], className='graph-container'),
-        html.Div([
-            html.Div(id='wordcloud-container', style={'display': 'none', 'margin': 'auto', 'width':'100%', 'height': '100px'}),
-            dcc.Graph(id='line-graph', style={'display': 'none', 'width': '210%', 'height': '500px'})
-        ], className='graph-container'),
-    ], style={'width': '100%', 'padding': '10px', 'boxSizing': 'border-box', 'overflowY': 'scroll', 'maxHeight': '800px'}),
+            html.Label("Category of Media", className='roboto-light', style={'marginRight': '5px'}),
+            dcc.Dropdown(
+                id='category-dropdown',
+                options=[{'label': cat.capitalize(), 'value': cat} for cat in categories.keys()],
+                value='entertainment',
+                clearable=False,
+                className='black-dropdown roboto-light',
+                style={'width': '180px', 'color': '#ffffff'}
+            ),
+            html.Label("Select Analysis Type", className='roboto-light', style={'marginLeft': '15px', 'marginRight': '5px'}),
+            dcc.Dropdown(
+                id='sort-dropdown',
+                options=[
+                    {'label': 'Engagement Metrics', 'value': 'Engagement Metrics'},
+                    {'label': 'Trends', 'value': 'Trends'}
+                ],
+                value='Engagement Metrics',
+                clearable=False,
+                className='black-dropdown roboto-light',
+                style={'width': '180px', 'color': '#ffffff'}
+            )
+        ], style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'flex-end', 'marginBottom': '20px', 'flex': '1'})
+    ], style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'space-between', 'width': '100%', 'max-width': '100%'}),
     html.Div(id='search-results', style={'marginTop': '20px', 'width': '100%', 'color': 'white'}),
-    html.Div(id='additional-graphs', style={'marginTop': '20px', 'width': '100%'}, className='roboto-slab-regular')
+    html.Div(id='graphs-container', className='roboto-light', children=[
+        html.Div([
+            dcc.Graph(id='bar-chart', style={'display': 'none', 'width': '75%', 'max-width': '100vw'}),
+            dcc.Graph(id='subscriber-chart', style={'display': 'none', 'width': '75%', 'max-width': '100vw'}),
+        ], className='graph-container', style={'width': '100%'}),
+        html.Div([
+            dcc.Graph(id='dot-like-chart', style={'display': 'none', 'width': '75%', 'max-width': '100vw'}),
+            dcc.Graph(id='dot-dislike-chart', style={'display': 'none', 'width': '75%', 'max-width': '100vw'}),
+        ], className='graph-container', style={'width': '100%'}),
+        html.Div([
+            html.Div(id='wordcloud-container', style={'display': 'none', 'margin': 'auto', 'width': '100%', 'height': '100px', 'max-width': '100vw'}),
+            dcc.Graph(id='line-graph', style={'display': 'none', 'width': '75%', 'max-width': '100vw', 'height': '500px'})
+        ], className='graph-container', style={'width': '100%'}),
+    ], style={'width': '100%', 'padding': '10px', 'boxSizing': 'border-box', 'overflow': 'hidden'}),
+    html.Div(id='additional-graphs', style={'marginTop': '20px', 'width': '100%'}, className='roboto-light')
 ])
 
 @app.callback(
@@ -188,7 +222,7 @@ app.layout = html.Div(style={'backgroundColor': '#121212', 'color': 'white', 'pa
 )
 def update_visualizations(selected_category, sort_by, n_clicks, search_value):
     print(f"Selected category: {selected_category}, sort by: {sort_by}")
-    data = categories[selected_category]
+    data, duration_view_counts = categories[selected_category]
     print(data.head())
 
     wordcloud_container = ''
@@ -209,7 +243,28 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
 
     if sort_by == 'Trends':
         if not data.empty:
-            trending_post = data.sort_values(by='Total Interactions', ascending=False).iloc[0]
+            # Ensure correct order of categories
+            categories_order = ['0-3', '3-6', '6-9', '9-12', '12-15', '15-18', '18-21', '21-24', '24-27', '27-30', '30-33', '33-36', '36-39']
+            duration_view_counts['duration_category'] = pd.Categorical(duration_view_counts['duration_category'], categories=categories_order, ordered=True)
+            duration_view_counts = duration_view_counts.dropna(subset=['duration_category'])
+            
+            # Create area chart for total view count by video duration intervals
+            area_fig = px.area(duration_view_counts, x='duration_category', y='view_count', category_orders={'duration_category': categories_order})
+            area_fig.update_traces(line=dict(color='grey'))
+            area_fig.update_layout(
+                xaxis=dict(title='Video Duration (minutes)', showgrid=False),
+                yaxis=dict(title='View Count', showgrid=False),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                title=dict(
+                    text='View Count vs. Video Duration',
+                    font=dict(family='Anton', size=24),
+                    x=0.5,
+                    xanchor='center'
+                )
+            )
+            additional_graphs_content = [dcc.Graph(figure=area_fig)]
 
             # Word count
             word_freq = calculate_word_frequencies(data['title'])
@@ -221,12 +276,6 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                 html.Img(src=wordcloud_src, style={'display': 'block', 'max-width': '100%', 'height': 'auto', 'margin': '0 auto'})
             ], style={'display': 'block', 'text-align': 'center', 'margin': '0 auto'})
             wordcloud_container_style = {'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'margin': '20px auto', 'width': '0%', 'height': '400px'}
-
-            # Frequency of hashtags
-            hashtag_freq = calculate_word_frequencies(data['hashtags'])
-            hashtag_fig = px.line(x=list(hashtag_freq.keys()), y=list(hashtag_freq.values()), title="Hashtag Frequencies", template="plotly_dark")
-            additional_graphs_content = [dcc.Graph(figure=hashtag_fig)]
-
 
     else:
         if not data.empty:
@@ -253,6 +302,12 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                     font=dict(family='Anton', size=24),
                     x=0.5,
                     xanchor='center'
+                ),
+                hoverlabel=dict(
+                    bgcolor="rgba(0, 0, 0, 0.7)",  # Black background with 70% opacity
+                    font_size=16,
+                    font_family="Rockwell",
+                    font_color="white"  # White font color
                 )
             )
             subscriber_fig.update_traces(marker=dict(color='red'), width=0.6)
@@ -267,6 +322,12 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                     font=dict(family='Anton', size=24),
                     x=0.5,
                     xanchor='center'
+                ),
+                hoverlabel=dict(
+                    bgcolor="rgba(0, 0, 0, 0.7)",  # Black background with 70% opacity
+                    font_size=16,
+                    font_family="Rockwell",
+                    font_color="white"  # White font color
                 )
             )
             dot_like_fig.update_layout(
@@ -280,6 +341,12 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                     font=dict(family='Anton', size=24),
                     x=0.5,
                     xanchor='center'
+                ),
+                hoverlabel=dict(
+                    bgcolor="rgba(0, 0, 0, 0.7)",  # Black background with 70% opacity
+                    font_size=16,
+                    font_family="Rockwell",
+                    font_color="white"  # White font color
                 )
             )
             dot_dislike_fig.update_layout(
@@ -293,12 +360,18 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                     font=dict(family='Anton', size=24),
                     x=0.5,
                     xanchor='center'
+                ),
+                hoverlabel=dict(
+                    bgcolor="rgba(0, 0, 0, 0.7)",  # Black background with 70% opacity
+                    font_size=16,
+                    font_family="Rockwell",
+                    font_color="white"  # White font color
                 )
             )
-            bar_chart_style = {'width': '85%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
-            subscriber_chart_style = {'width': '85%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
-            dot_like_chart_style = {'width': '85%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
-            dot_dislike_chart_style = {'width': '85%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
+            bar_chart_style = {'width': '75%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
+            subscriber_chart_style = {'width': '75%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
+            dot_like_chart_style = {'width': '75%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
+            dot_dislike_chart_style = {'width': '75%', 'display': 'inline-block', 'vertical-align': 'top', 'margin-bottom': '20px', 'boxSizing': 'border-box', 'padding': '10px'}
             liked_users = data.groupby('channel')['Net Likes'].sum().reset_index()
             liked_users = liked_users.sort_values(by='Net Likes', ascending=False)
             line_fig = px.line(liked_users, x='channel', y='Net Likes', title='Channel Popularity by Net Like', template="plotly_dark")
@@ -312,6 +385,10 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                     zeroline=False 
                 ),
                 xaxis=dict(
+                    title=dict(
+                        text='Channel',
+                        font=dict(family='Anton', size=18),
+                    ),
                     showgrid=False,  
                     zeroline=False  
                 ),
@@ -322,15 +399,21 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
                     xanchor='center'
                 ),
                 plot_bgcolor='rgba(0,0,0,0)',  
-                paper_bgcolor='rgba(0,0,0,0)'  
+                paper_bgcolor='rgba(0,0,0,0)',
+                hoverlabel=dict(
+                    bgcolor="rgba(0, 0, 0, 0.7)",  # Black background with 70% opacity
+                    font_size=16,
+                    font_family="Rockwell",
+                    font_color="white"  # White font color
+                )
             )
-            line_graph_style = {'display': 'block', 'margin-top': '20px', 'width': '210%', 'height': '500px'}
+            line_graph_style = {'display': 'block', 'margin-top': '20px', 'width': '95%', 'height': '500px'}
             
     if search_value:
         search_results = data[data['title'].str.contains(search_value, case=False, na=False) | data['description'].str.contains(search_value, case=False, na=False)]
         if not search_results.empty:
             search_results_content = html.Div([
-                html.H4("Search Results", style={'fontFamily': 'Anton', 'textAlign': 'center'}),
+                html.H4("Relevant Posts:", style={'fontFamily': 'Roboto', 'textAlign': 'center'}),
                 html.Ul([html.Li([
                     html.P(f"Title: {row['title']}"),
                     html.P(f"Channel: {row['channel']}"),
