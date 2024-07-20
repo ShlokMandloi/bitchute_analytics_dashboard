@@ -47,7 +47,7 @@ def preprocess_data(df):
     
     return df
 
-data_directory = r"C:\Users\Shlok Mandloi\Desktop\Shlok\Shlok - USA\simppl\dash dashboard\data"
+data_directory = os.path.join(os.path.dirname(__file__), 'data')
 
 # Read the preprocessed CSV files from the data directory
 categories = {
