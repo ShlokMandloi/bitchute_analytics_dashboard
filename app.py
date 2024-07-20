@@ -77,9 +77,6 @@ def preprocess_data(df):
     
     return agg_df, duration_view_counts
 
-
-
-
 data_directory = os.path.join(os.path.dirname(__file__), 'data')
 
 # Read the preprocessed CSV files from the data directory
