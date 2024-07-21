@@ -15,7 +15,7 @@ There are 4 seperate subscripts callbacks.py , layout.py , custom.css and styles
 It is necessary for these subscripts to be in the same directory to run, especially callbacks.py and layout.py. 'assets' deals with the aesthetics of the dashboard.
 
 Dash App Dashboard hosted on AWS EC2 Instance. A Docker container was made to create a consistent environment. 
-We connected to the EC2 instance using SSH, providing path to the locally downloaded EC2 Key Pair and the instance's public IP address
+Connected to the EC2 instance using SSH, providing path to the locally downloaded EC2 Key Pair and the instance's public IP address
 Installed Docker and Git on the EC2 instance, started the Docker service and added the EC2 user to the Docker.
 Created a directory 'bitchute_app' in the EC2 instance. Cloned this GitHub repo in the made project directory.
 Created a Dockerfile and installed the requirements.txt
