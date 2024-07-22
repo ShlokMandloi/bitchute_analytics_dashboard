@@ -428,4 +428,5 @@ def update_visualizations(selected_category, sort_by, n_clicks, search_value):
     return fig, subscriber_fig, dot_like_fig, dot_dislike_fig, wordcloud_container, bar_chart_style, subscriber_chart_style, dot_like_chart_style, dot_dislike_chart_style, wordcloud_container_style, additional_graphs_content, line_fig, line_graph_style, search_results_content
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host='0.0.0.0', port=80)
+
