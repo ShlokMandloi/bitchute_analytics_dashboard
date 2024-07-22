@@ -25,6 +25,8 @@ Ran the Docker Container in Detach Mode
 
 The dashboard is running on this URL: http://54.234.243.223/
 
+Jupyter Notebook deployed on GitHub Pages: https://shlokmandloi.github.io/bitchute_analytics_dashboard/scraper_bitchute.html
+
 
 
 
