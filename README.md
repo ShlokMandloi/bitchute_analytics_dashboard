@@ -29,7 +29,7 @@ Jupyter Notebook deployed on GitHub Pages: https://shlokmandloi.github.io/bitchu
 
 Steps to Run:
 1. Clone the GitHub repo to the Desktop, for simplicity.
-2. Run the scraper_bitchute.ipynb and make sure that the dash_csv_{category} CSV files are being saved in the same project directory in the 'data' folder.
+2. Run the scraper_bitchute.ipynb and make sure that the dash_csv_{category} CSV files, from the .ipynb script, are being saved in the repository project directory in the 'data' folder.
 3. Open the app.py python script. This script creates the dashboard using Dash by Plotly.
 4. Make sure that callbacks.py , layout.py and the .css scripts in the assets folder are in the same directory
 5. Ensure that app.py care pointed to the CSV files (dash_csv_{category}.csv)
