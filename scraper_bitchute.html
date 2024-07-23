@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>BITCHUTE &#8212; Bitchute Scraper</title>
+    <title>&lt;no title&gt; &#8212; Bitchute Scraper</title>
   
   
   
@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
   
@@ -172,10 +172,7 @@
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">BITCHUTE</a></li>
-</ul>
-
+        
     </div>
 </nav></div>
     </div>
@@ -299,7 +296,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -310,11 +309,19 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>BITCHUTE</h1>
+    <h1><no title></h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -324,8 +331,100 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="bitchute">
-<h1>BITCHUTE<a class="headerlink" href="#bitchute" title="Link to this heading">#</a></h1>
+  <p>This is the scraper code for <a class="reference external" href="http://api.bitchute.com">api.bitchute.com</a>; Run the code as ‘Run All Cells’ in the ‘Run’ tab above.</p>
+<p>The code installs the dependencies first and then proceeds with the execution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>markdownify
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>pandas
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>beautifulsoup4
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>selenium
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>webdriver-manager
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>python-dateutil
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>tqdm
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>retrying
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>requests
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: markdownify in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (0.12.1)
+Requirement already satisfied: beautifulsoup4&lt;5,&gt;=4.9 in c:\anaconda3\lib\site-packages (from markdownify) (4.12.2)
+Requirement already satisfied: six&lt;2,&gt;=1.15 in c:\anaconda3\lib\site-packages (from markdownify) (1.16.0)
+Requirement already satisfied: soupsieve&gt;1.2 in c:\anaconda3\lib\site-packages (from beautifulsoup4&lt;5,&gt;=4.9-&gt;markdownify) (2.5)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pandas in c:\anaconda3\lib\site-packages (2.1.4)
+Requirement already satisfied: numpy&lt;2,&gt;=1.23.2 in c:\anaconda3\lib\site-packages (from pandas) (1.26.4)
+Requirement already satisfied: python-dateutil&gt;=2.8.2 in c:\anaconda3\lib\site-packages (from pandas) (2.8.2)
+Requirement already satisfied: pytz&gt;=2020.1 in c:\anaconda3\lib\site-packages (from pandas) (2023.3.post1)
+Requirement already satisfied: tzdata&gt;=2022.1 in c:\anaconda3\lib\site-packages (from pandas) (2023.3)
+Requirement already satisfied: six&gt;=1.5 in c:\anaconda3\lib\site-packages (from python-dateutil&gt;=2.8.2-&gt;pandas) (1.16.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: beautifulsoup4 in c:\anaconda3\lib\site-packages (4.12.2)
+Requirement already satisfied: soupsieve&gt;1.2 in c:\anaconda3\lib\site-packages (from beautifulsoup4) (2.5)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: selenium in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (4.22.0)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.26 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from urllib3[socks]&lt;3,&gt;=1.26-&gt;selenium) (1.26.19)
+Requirement already satisfied: trio~=0.17 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from selenium) (0.25.1)
+Requirement already satisfied: trio-websocket~=0.9 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from selenium) (0.11.1)
+Requirement already satisfied: certifi&gt;=2021.10.8 in c:\anaconda3\lib\site-packages (from selenium) (2024.2.2)
+Requirement already satisfied: typing_extensions&gt;=4.9.0 in c:\anaconda3\lib\site-packages (from selenium) (4.9.0)
+Requirement already satisfied: websocket-client&gt;=1.8.0 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from selenium) (1.8.0)
+Requirement already satisfied: attrs&gt;=23.2.0 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from trio~=0.17-&gt;selenium) (23.2.0)
+Requirement already satisfied: sortedcontainers in c:\anaconda3\lib\site-packages (from trio~=0.17-&gt;selenium) (2.4.0)
+Requirement already satisfied: idna in c:\anaconda3\lib\site-packages (from trio~=0.17-&gt;selenium) (3.4)
+Requirement already satisfied: outcome in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from trio~=0.17-&gt;selenium) (1.3.0.post0)
+Requirement already satisfied: sniffio&gt;=1.3.0 in c:\anaconda3\lib\site-packages (from trio~=0.17-&gt;selenium) (1.3.0)
+Requirement already satisfied: cffi&gt;=1.14 in c:\anaconda3\lib\site-packages (from trio~=0.17-&gt;selenium) (1.16.0)
+Requirement already satisfied: wsproto&gt;=0.14 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from trio-websocket~=0.9-&gt;selenium) (1.2.0)
+Requirement already satisfied: PySocks!=1.5.7,&lt;2.0,&gt;=1.5.6 in c:\anaconda3\lib\site-packages (from urllib3[socks]&lt;3,&gt;=1.26-&gt;selenium) (1.7.1)
+Requirement already satisfied: pycparser in c:\anaconda3\lib\site-packages (from cffi&gt;=1.14-&gt;trio~=0.17-&gt;selenium) (2.21)
+Requirement already satisfied: h11&lt;1,&gt;=0.9.0 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from wsproto&gt;=0.14-&gt;trio-websocket~=0.9-&gt;selenium) (0.14.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: webdriver-manager in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (4.0.1)
+Requirement already satisfied: requests in c:\anaconda3\lib\site-packages (from webdriver-manager) (2.31.0)
+Requirement already satisfied: python-dotenv in c:\anaconda3\lib\site-packages (from webdriver-manager) (0.21.0)
+Requirement already satisfied: packaging in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from webdriver-manager) (24.1)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in c:\anaconda3\lib\site-packages (from requests-&gt;webdriver-manager) (2.0.4)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in c:\anaconda3\lib\site-packages (from requests-&gt;webdriver-manager) (3.4)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from requests-&gt;webdriver-manager) (1.26.19)
+Requirement already satisfied: certifi&gt;=2017.4.17 in c:\anaconda3\lib\site-packages (from requests-&gt;webdriver-manager) (2024.2.2)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: python-dateutil in c:\anaconda3\lib\site-packages (2.8.2)
+Requirement already satisfied: six&gt;=1.5 in c:\anaconda3\lib\site-packages (from python-dateutil) (1.16.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: tqdm in c:\anaconda3\lib\site-packages (4.65.0)
+Requirement already satisfied: colorama in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from tqdm) (0.4.6)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: retrying in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (1.3.4)
+Requirement already satisfied: six&gt;=1.7.0 in c:\anaconda3\lib\site-packages (from retrying) (1.16.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: requests in c:\anaconda3\lib\site-packages (2.31.0)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in c:\anaconda3\lib\site-packages (from requests) (2.0.4)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in c:\anaconda3\lib\site-packages (from requests) (3.4)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in c:\users\shlok mandloi\appdata\roaming\python\python311\site-packages (from requests) (1.26.19)
+Requirement already satisfied: certifi&gt;=2017.4.17 in c:\anaconda3\lib\site-packages (from requests) (2024.2.2)
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
@@ -344,9 +443,9 @@ document.write(`
 <span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">dateutil_parse</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pandas==</span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time==Standard library, no version&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;markdownify==</span><span class="si">{</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;markdownify&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;beautifulsoup4==</span><span class="si">{</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;beautifulsoup4&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;selenium==</span><span class="si">{</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;selenium&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -360,7 +459,6 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas==2.1.4
-time==Standard library, no version
 markdownify==0.12.1
 beautifulsoup4==4.12.2
 selenium==4.22.0
@@ -815,7 +913,7 @@ requests==2.31.0
     <span class="k">def</span> <span class="nf">get_recent_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
         <span class="n">recent_videos</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;video_search&#39;</span><span class="p">)</span>  <span class="c1"># Ensure the type matches your use case</span>
+        <span class="n">videos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;video_search&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">videos</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
             <span class="n">recent_videos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">recent_videos</span><span class="p">)</span>
@@ -824,7 +922,7 @@ requests==2.31.0
 
     <span class="k">def</span> <span class="nf">get_video_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_id</span><span class="p">):</span>
         <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">video_base</span><span class="si">}{</span><span class="n">video_id</span><span class="si">}</span><span class="s2">/&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieving: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug: Print the URL to check if it&#39;s correct</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieving: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
 
@@ -854,7 +952,6 @@ requests==2.31.0
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">subscriber_count</span> <span class="o">=</span> <span class="n">subscriber_count_text</span>
 
-        <span class="c1"># Find video hashtags</span>
         <span class="n">video_hashtags_element</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;video-hashtags&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">video_hashtags_element</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">video_hashtags_element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;li&#39;</span><span class="p">):</span>
@@ -864,21 +961,21 @@ requests==2.31.0
 
     <span class="k">def</span> <span class="nf">process_likes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">likes</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">likes</span> <span class="o">=</span> <span class="n">likes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># Remove commas and strip whitespace</span>
+            <span class="n">likes</span> <span class="o">=</span> <span class="n">likes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">likes</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">process_dislikes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dislikes</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">dislikes</span> <span class="o">=</span> <span class="n">dislikes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># Remove commas and strip whitespace</span>
+            <span class="n">dislikes</span> <span class="o">=</span> <span class="n">dislikes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">dislikes</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">process_subscribers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscribers</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">subscribers</span> <span class="o">=</span> <span class="n">subscribers</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># Remove commas and strip whitespace</span>
+            <span class="n">subscribers</span> <span class="o">=</span> <span class="n">subscribers</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">subscribers</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -1310,6 +1407,10 @@ requests==2.31.0
     <span class="k">def</span> <span class="nf">set_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">your_crawler_module</span> <span class="kn">import</span> <span class="n">Crawler</span>  <span class="c1"># Adjust this import as necessary</span>
+
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="c1"># Create an instance of the Crawler</span>
     <span class="n">crawler</span> <span class="o">=</span> <span class="n">Crawler</span><span class="p">(</span><span class="n">headless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1325,8 +1426,9 @@ requests==2.31.0
         <span class="p">(</span><span class="s1">&#39;Sports&#39;</span><span class="p">,</span> <span class="s1">&#39;https://api.bitchute.com/category/sport/&#39;</span><span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="c1"># Directory to save the CSV files</span>
-    <span class="n">save_directory</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\Shlok Mandloi\Desktop\Shlok\Shlok - USA\simppl\dash dashboard\data&quot;</span>
+    <span class="c1"># Directory to save the CSV files relative to the project&#39;s root directory</span>
+    <span class="n">script_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">save_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_directory</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_directory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">category_name</span><span class="p">,</span> <span class="n">category_url</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
@@ -1355,21 +1457,16 @@ requests==2.31.0
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">975</span>
-<span class="g g-Whitespace">    </span><span class="mi">972</span>         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scraping completed for </span><span class="si">{</span><span class="n">category_name</span><span class="si">}</span><span class="s2">. Results saved to &#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">974</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">975</span>     <span class="n">main</span><span class="p">()</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">937</span>
+<span class="g g-Whitespace">    </span><span class="mi">935</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="g g-Whitespace">    </span><span class="mi">936</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="ne">--&gt; </span><span class="mi">937</span> <span class="kn">from</span> <span class="nn">your_crawler_module</span> <span class="kn">import</span> <span class="n">Crawler</span>  <span class="c1"># Adjust this import as necessary</span>
+<span class="g g-Whitespace">    </span><span class="mi">939</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">940</span>     <span class="c1"># Create an instance of the Crawler</span>
+<span class="g g-Whitespace">    </span><span class="mi">941</span>     <span class="n">crawler</span> <span class="o">=</span> <span class="n">Crawler</span><span class="p">(</span><span class="n">headless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="nn">Cell In[2], line 953,</span> in <span class="ni">main</span><span class="nt">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">951</span> <span class="c1"># Directory to save the CSV files</span>
-<span class="g g-Whitespace">    </span><span class="mi">952</span> <span class="n">save_directory</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\Shlok Mandloi\Desktop\Shlok\Shlok - USA\simppl\dash dashboard\data&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">953</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_directory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">955</span> <span class="k">for</span> <span class="n">category_name</span><span class="p">,</span> <span class="n">category_url</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">956</span>     <span class="c1"># Get recent videos for the current category</span>
-<span class="g g-Whitespace">    </span><span class="mi">957</span>     <span class="n">recent_videos</span> <span class="o">=</span> <span class="n">crawler</span><span class="o">.</span><span class="n">get_recent_videos</span><span class="p">(</span><span class="n">category_url</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;os&#39; is not defined
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;your_crawler_module&#39;
 </pre></div>
 </div>
 </div>
@@ -1379,8 +1476,9 @@ requests==2.31.0
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># Directory where CSV files are saved</span>
-<span class="n">save_directory</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\Shlok Mandloi\Desktop\Shlok\Shlok - USA\simppl\dash dashboard\data&quot;</span>
+<span class="c1"># Directory where CSV files are saved relative to the script location</span>
+<span class="n">script_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">save_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_directory</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="c1"># Paths to the CSV files</span>
 <span class="n">csv_files</span> <span class="o">=</span> <span class="p">{</span>
@@ -1416,8 +1514,9 @@ requests==2.31.0
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># Directory where the cleaned CSV files will be saved</span>
-<span class="n">save_directory</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Users\Shlok Mandloi\Desktop\Shlok\Shlok - USA\simppl\dash dashboard\data&quot;</span>
+<span class="c1"># Directory where the cleaned CSV files will be saved relative to the script location</span>
+<span class="n">script_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">save_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_directory</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="c1"># Ensure the directory exists</span>
 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_directory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1663,7 +1762,6 @@ Saved preprocessed data to dash_csv_news.csv
 </table>
 </div></div></div>
 </div>
-</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1710,6 +1808,21 @@ Saved preprocessed data to dash_csv_news.csv
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+  </nav></div>
+
+</div></div>
               
             
           </div>

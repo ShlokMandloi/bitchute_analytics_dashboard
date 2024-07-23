@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
   
@@ -173,10 +173,7 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="scraper_bitchute.html">BITCHUTE</a></li>
-</ul>
-
+        
     </div>
 </nav></div>
     </div>
@@ -339,6 +336,25 @@ This script points to the project directory to read the ‘cleaned’ CSVs for e
 CSVs are stored in dataframe variables and are manipulated simultaneously to create necessary plots for the dashboard.
 There are 4 seperate subscripts <a class="reference external" href="http://callbacks.py">callbacks.py</a> , <a class="reference external" href="http://layout.py">layout.py</a> , custom.css and styles.css (in the assets folder)
 It is necessary for these subscripts to be in the same directory to run, especially <a class="reference external" href="http://callbacks.py">callbacks.py</a> and <a class="reference external" href="http://layout.py">layout.py</a>. ‘assets’ deals with the aesthetics of the dashboard.</p>
+<p>Dash App Dashboard hosted on AWS EC2 Instance. A Docker container was made to create a consistent environment.
+Connected to the EC2 instance using SSH, providing path to the locally downloaded EC2 Key Pair and the instance’s public IP address
+Installed Docker and Git on the EC2 instance, started the Docker service and added the EC2 user to the Docker.
+Created a directory ‘bitchute_app’ in the EC2 instance. Cloned this GitHub repo in the made project directory.
+Created a Dockerfile and installed the requirements.txt
+Built the Docker Image using the Dockerfile
+Ran the Docker Container in Detach Mode</p>
+<p>The dashboard is running on this URL: <a class="reference external" href="http://54.234.243.223/">http://54.234.243.223/</a></p>
+<p>Jupyter Notebook deployed on GitHub Pages: <a class="reference external" href="https://shlokmandloi.github.io/bitchute_analytics_dashboard/scraper_bitchute.html">https://shlokmandloi.github.io/bitchute_analytics_dashboard/scraper_bitchute.html</a></p>
+<p>Steps to Run:</p>
+<ol class="arabic simple">
+<li><p>Clone the GitHub repo to the Desktop, for simplicity.</p></li>
+<li><p>Run the scraper_bitchute.ipynb and make sure that the dash_csv_{category} CSV files, from the .ipynb script, are being saved in the repository project directory in the ‘data’ folder.</p></li>
+<li><p>Open the <a class="reference external" href="http://app.py">app.py</a> python script. This script creates the dashboard using Dash by Plotly.</p></li>
+<li><p>Make sure that <a class="reference external" href="http://callbacks.py">callbacks.py</a> , <a class="reference external" href="http://layout.py">layout.py</a> and the .css scripts in the assets folder are in the same directory</p></li>
+<li><p>Ensure that <a class="reference external" href="http://app.py">app.py</a> care pointed to the CSV files (dash_csv_{category}.csv)</p></li>
+<li><p>The requirements.txt in the GitHub repo is a library requirements file for <a class="reference external" href="http://app.py">app.py</a> and not scraper_bitchute.ipynb (There are pip codelines in scraper_bitchute which installs all requirements needed for the script)</p></li>
+<li><p>Once <a class="reference external" href="http://app.py">app.py</a> runs correctly, it will say the following message ‘Dash is running on <a class="reference external" href="http://0.0.0.0:80/">http://0.0.0.0:80/</a>’, the dashboard may not open on the given link since it has been configured to be deployed to AWS EC2, to access the dashbord, click on the publicly available AWS IP address link above. The dashboard may not accessible locally.</p></li>
+</ol>
 </section>
 
     <script type="text/x-thebe-config">
