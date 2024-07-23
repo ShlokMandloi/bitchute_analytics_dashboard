@@ -458,7 +458,7 @@ class Crawler():
     def get_recent_videos(self, url):
         recent_videos = []
         src = self.call(url)
-        videos = self.parser(src, type='video_search')  # Ensure the type matches your use case
+        videos = self.parser(src, type='video_search')
         for index, row in videos.iterrows():
             recent_videos.append(row)
         return pd.DataFrame(recent_videos)
@@ -467,7 +467,7 @@ class Crawler():
 
     def get_video_details(self, video_id):
         url = f"{self.video_base}{video_id}/"
-        print(f"Retrieving: {url}")  # Debug: Print the URL to check if it's correct
+        print(f"Retrieving: {url}")
         src = self.call(url)
         soup = BeautifulSoup(src, 'html.parser')
 
@@ -497,7 +497,6 @@ class Crawler():
             except ValueError:
                 subscriber_count = subscriber_count_text
 
-        # Find video hashtags
         video_hashtags_element = soup.find(id='video-hashtags')
         if video_hashtags_element:
             for tag in video_hashtags_element.find_all('li'):
@@ -507,21 +506,21 @@ class Crawler():
 
     def process_likes(self, likes):
         try:
-            likes = likes.replace(',', '').strip()  # Remove commas and strip whitespace
+            likes = likes.replace(',', '').strip()
             return int(likes)
         except ValueError:
             return None
 
     def process_dislikes(self, dislikes):
         try:
-            dislikes = dislikes.replace(',', '').strip()  # Remove commas and strip whitespace
+            dislikes = dislikes.replace(',', '').strip()
             return int(dislikes)
         except ValueError:
             return None
 
     def process_subscribers(self, subscribers):
         try:
-            subscribers = subscribers.replace(',', '').strip()  # Remove commas and strip whitespace
+            subscribers = subscribers.replace(',', '').strip()
             return int(subscribers)
         except ValueError:
             return None
@@ -953,6 +952,10 @@ class Crawler():
     def set_status(self, message):
         self.status.append(message)
 
+import os
+import pandas as pd
+from your_crawler_module import Crawler  # Adjust this import as necessary
+
 def main():
     # Create an instance of the Crawler
     crawler = Crawler(headless=True, verbose=True)
@@ -968,8 +971,9 @@ def main():
         ('Sports', 'https://api.bitchute.com/category/sport/')
     ]
 
-    # Directory to save the CSV files
-    save_directory = r"C:\Users\Shlok Mandloi\Desktop\Shlok\Shlok - USA\simppl\dash dashboard\data"
+    # Directory to save the CSV files relative to the project's root directory
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    save_directory = os.path.join(script_directory, '..', 'data')
     os.makedirs(save_directory, exist_ok=True)
 
     for category_name, category_url in categories:
@@ -993,23 +997,19 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 ------------------
 
 
 [1;31m---------------------------------------------------------------------------[0m
-[1;31mNameError[0m                                 Traceback (most recent call last)
-Cell [1;32mIn[2], line 975[0m
-[0;32m    972[0m         [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mScraping completed for [39m[38;5;132;01m{[39;00mcategory_name[38;5;132;01m}[39;00m[38;5;124m. Results saved to [39m[38;5;124m'[39m[38;5;132;01m{[39;00mfile_path[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m.[39m[38;5;124m"[39m)
-[0;32m    974[0m [38;5;28;01mif[39;00m [38;5;18m__name__[39m [38;5;241m==[39m [38;5;124m"[39m[38;5;124m__main__[39m[38;5;124m"[39m:
-[1;32m--> 975[0m     main()
+[1;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Cell [1;32mIn[3], line 937[0m
+[0;32m    935[0m [38;5;28;01mimport[39;00m [38;5;21;01mos[39;00m
+[0;32m    936[0m [38;5;28;01mimport[39;00m [38;5;21;01mpandas[39;00m [38;5;28;01mas[39;00m [38;5;21;01mpd[39;00m
+[1;32m--> 937[0m [38;5;28;01mfrom[39;00m [38;5;21;01myour_crawler_module[39;00m [38;5;28;01mimport[39;00m Crawler  [38;5;66;03m# Adjust this import as necessary[39;00m
+[0;32m    939[0m [38;5;28;01mdef[39;00m [38;5;21mmain[39m():
+[0;32m    940[0m     [38;5;66;03m# Create an instance of the Crawler[39;00m
+[0;32m    941[0m     crawler [38;5;241m=[39m Crawler(headless[38;5;241m=[39m[38;5;28;01mTrue[39;00m, verbose[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
 
-Cell [1;32mIn[2], line 953[0m, in [0;36mmain[1;34m()[0m
-[0;32m    951[0m [38;5;66;03m# Directory to save the CSV files[39;00m
-[0;32m    952[0m save_directory [38;5;241m=[39m [38;5;124mr[39m[38;5;124m"[39m[38;5;124mC:[39m[38;5;124m\[39m[38;5;124mUsers[39m[38;5;124m\[39m[38;5;124mShlok Mandloi[39m[38;5;124m\[39m[38;5;124mDesktop[39m[38;5;124m\[39m[38;5;124mShlok[39m[38;5;124m\[39m[38;5;124mShlok - USA[39m[38;5;124m\[39m[38;5;124msimppl[39m[38;5;124m\[39m[38;5;124mdash dashboard[39m[38;5;124m\[39m[38;5;124mdata[39m[38;5;124m"[39m
-[1;32m--> 953[0m os[38;5;241m.[39mmakedirs(save_directory, exist_ok[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
-[0;32m    955[0m [38;5;28;01mfor[39;00m category_name, category_url [38;5;129;01min[39;00m categories:
-[0;32m    956[0m     [38;5;66;03m# Get recent videos for the current category[39;00m
-[0;32m    957[0m     recent_videos [38;5;241m=[39m crawler[38;5;241m.[39mget_recent_videos(category_url)
-
-[1;31mNameError[0m: name 'os' is not defined
+[1;31mModuleNotFoundError[0m: No module named 'your_crawler_module'
 
