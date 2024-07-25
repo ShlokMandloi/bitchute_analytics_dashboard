@@ -27,16 +27,19 @@ The dashboard is running on this URL: http://54.234.243.223/
 
 Jupyter Notebook deployed on GitHub Pages: https://shlokmandloi.github.io/bitchute_analytics_dashboard/scraper_bitchute.html
 
+Video Recording of the Dashboard: https://youtu.be/EPY60RKgg-8
+
+
 Steps to Run:
 1. Clone the GitHub repo to the Desktop, for simplicity.
 2. Run the scraper_bitchute.ipynb and make sure that the dash_csv_{category} CSV files, from the .ipynb script, are being saved in the repository project directory in the 'data' folder.
 3. Open the app.py python script. This script creates the dashboard using Dash by Plotly.
-4. Make sure that callbacks.py , layout.py and the .css scripts in the assets folder are in the same directory
-5. Ensure that app.py care pointed to the CSV files (dash_csv_{category}.csv)
-6. The requirements.txt in the GitHub repo is a library requirements file for app.py and not scraper_bitchute.ipynb (There are pip codelines in scraper_bitchute which installs all requirements needed for the script)
-7. Once app.py runs correctly, it will say the following message 'Dash is running on http://0.0.0.0:80/', the dashboard may not open on the given link since it has been configured to be deployed to AWS EC2, to access the dashbord, click on the publicly available AWS IP address link above. The dashboard may not accessible locally. 
+4. Make sure that callbacks.py , layout.py and the .css scripts in the assets folder, are in the same directory
+5. Ensure that app.py are pointed to the CSV files (dash_csv_{category}.csv)
+6. The requirements.txt in the GitHub repo is a library requirements file for app.py and not scraper_bitchute.ipynb (There are pip codelines in scraper_bitchute which installs all requirements needed for that script)
+7. Once app.py runs correctly, it will display the following message 'Dash is running on http://0.0.0.0:80/', the dashboard may not open from this displayed link since it has been configured to be deployed to AWS EC2, to access the dashbord, click on the publicly available AWS IP address link above. The dashboard may not accessible locally. To run it locally, change the line 431 in app.py to "app.run_server(debug=True)". 
+8. Any changes required to be done to the dashboard are first done locally, once confirmed, it is pushed to GitHub and then re-deployed on AWS. 
 
 
-Video Recording of the Dashboard: https://youtu.be/EPY60RKgg-8
 
 
