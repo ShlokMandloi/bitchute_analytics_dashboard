@@ -37,5 +37,6 @@ Steps to Run:
 7. Once app.py runs correctly, it will say the following message 'Dash is running on http://0.0.0.0:80/', the dashboard may not open on the given link since it has been configured to be deployed to AWS EC2, to access the dashbord, click on the publicly available AWS IP address link above. The dashboard may not accessible locally. 
 
 
+Video Recording of the Dashboard: https://youtu.be/EPY60RKgg-8
 
 
